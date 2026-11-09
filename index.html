@@ -84,7 +84,7 @@ function createSongList(list,elem){const frag=document.createDocumentFragment();
 function displayShared(){const data=readSharedHash();if(!data)return false;sharedData=data;$('shared-title').textContent=data.t;createSongList(data.s,$('shared-list'));show('shared-result');document.title='好きな楽曲TOP10｜ミリオンライブ！';return true}
 function sharedXText(data){return '私のミリオンライブ！好きな楽曲TOP10を公開しました！\n'+data.s.slice(0,3).map((s,i)=>`${i+1}位 ${s}`).join('\n')+'\n\n#ミリオンライブ #ミリシタ'}
 function openX(url,data){const params=new URLSearchParams({text:sharedXText(data),url});window.open('https://twitter.com/intent/tweet?'+params.toString(),'_blank','noopener,noreferrer')}
-function exitShared(){history.replaceState(null,'',location.href.split('#')[0]);sharedData=null;document.title='ミリオンライブ！楽曲ランキングメーカー';if(state)render();else show('setup')}
+function exitShared(){window.history.replaceState(null,'',location.href.split('#')[0]);sharedData=null;document.title='ミリオンライブ！楽曲ランキングメーカー';show('setup');if(state){$('work').value=state.title;$('restore').hidden=!!state.done}else{$('restore').hidden=true}count();window.scrollTo({top:0,behavior:'auto'})}
 $('share-link').onclick=async()=>{const url=createShareLink();if(!url)return;if(!hasWebAddress()){notify('共有にはWeb公開が必要です。公開後のURLで作成してください');return}const ok=await copyTextRobust(url);notify(ok?'共有URLを作成してコピーしました':'共有URLを作成しました')};
 $('copy-share-url').onclick=async()=>{const url=createShareLink();if(!url)return;if(!hasWebAddress()){notify('ローカルファイルのURLは他の人に共有できません');return}notify(await copyTextRobust(url)?'共有URLをコピーしました':'URLを選択してコピーしてください')};
 $('preview-share').onclick=()=>{const data=resultPayload();if(!data)return;const url=shareUrl(data);window.open(url,'_blank','noopener,noreferrer')};
